@@ -76,11 +76,6 @@ resource "google_secret_manager_secret" "jwt_secret_key" {
   depends_on = [google_project_service.secret_manager]
 }
 
-resource "google_secret_manager_secret_version" "jwt_secret_key" {
-  secret      = google_secret_manager_secret.jwt_secret_key.id
-  secret_data = var.jwt_secret_key
-}
-
 resource "google_secret_manager_secret" "session_secret_key" {
   secret_id = "${var.secret_prefix}-session-secret-key"
 
@@ -89,11 +84,6 @@ resource "google_secret_manager_secret" "session_secret_key" {
   }
 
   depends_on = [google_project_service.secret_manager]
-}
-
-resource "google_secret_manager_secret_version" "session_secret_key" {
-  secret      = google_secret_manager_secret.session_secret_key.id
-  secret_data = var.session_secret_key
 }
 
 resource "google_secret_manager_secret" "google_client_id" {
@@ -106,11 +96,6 @@ resource "google_secret_manager_secret" "google_client_id" {
   depends_on = [google_project_service.secret_manager]
 }
 
-resource "google_secret_manager_secret_version" "google_client_id" {
-  secret      = google_secret_manager_secret.google_client_id.id
-  secret_data = var.google_oauth_client_id
-}
-
 resource "google_secret_manager_secret" "google_client_secret" {
   secret_id = "${var.secret_prefix}-google-client-secret"
 
@@ -119,11 +104,6 @@ resource "google_secret_manager_secret" "google_client_secret" {
   }
 
   depends_on = [google_project_service.secret_manager]
-}
-
-resource "google_secret_manager_secret_version" "google_client_secret" {
-  secret      = google_secret_manager_secret.google_client_secret.id
-  secret_data = var.google_oauth_client_secret
 }
 
 resource "google_project_iam_member" "secret_accessor" {
@@ -238,10 +218,10 @@ resource "google_cloud_run_service" "app" {
   depends_on = [
     google_project_service.cloud_run,
     google_firestore_database.main,
-    google_secret_manager_secret_version.jwt_secret_key,
-    google_secret_manager_secret_version.session_secret_key,
-    google_secret_manager_secret_version.google_client_id,
-    google_secret_manager_secret_version.google_client_secret,
+    google_secret_manager_secret.jwt_secret_key,
+    google_secret_manager_secret.session_secret_key,
+    google_secret_manager_secret.google_client_id,
+    google_secret_manager_secret.google_client_secret,
   ]
 }
 

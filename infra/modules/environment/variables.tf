@@ -76,27 +76,3 @@ variable "secret_prefix" {
   type        = string
   default     = "notes"
 }
-
-variable "google_oauth_client_id" {
-  description = "Google OAuth 2.0 client ID"
-  type        = string
-  sensitive   = true
-}
-
-variable "google_oauth_client_secret" {
-  description = "Google OAuth 2.0 client secret"
-  type        = string
-  sensitive   = true
-}
-
-variable "jwt_secret_key" {
-  description = "JWT signing secret"
-  type        = string
-  sensitive   = true
-}
-
-variable "session_secret_key" {
-  description = "Session signing secret for OAuth session cookie"
-  type        = string
-  sensitive   = true
-}
