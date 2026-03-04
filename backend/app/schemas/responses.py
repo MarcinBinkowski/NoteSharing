@@ -40,7 +40,6 @@ class NoteListItem(BaseModel):
 class UserResponse(BaseModel):
     id: uuid.UUID
     email: str
-    name: str
 
 
 class TokenResponse(BaseModel):

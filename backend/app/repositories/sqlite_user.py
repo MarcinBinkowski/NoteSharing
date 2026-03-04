@@ -17,21 +17,19 @@ class SqliteUserRepository:
             id=uuid.UUID(row["id"]),
             google_id=row["google_id"],
             email=row["email"],
-            name=row["name"],
             created_at=dt if dt.tzinfo else dt.replace(tzinfo=UTC),
         )
 
     async def create(self, user: User) -> User:
         await self._conn.execute(
             """
-            INSERT INTO users (id, google_id, email, name, created_at)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO users (id, google_id, email, created_at)
+            VALUES (?, ?, ?, ?)
             """,
             (
                 str(user.id),
                 user.google_id,
                 user.email.lower(),
-                user.name,
                 user.created_at.isoformat(),
             ),
         )
@@ -57,18 +55,16 @@ class SqliteUserRepository:
         # A single statement eliminates the TOCTOU race between concurrent OAuth callbacks.
         async with self._conn.execute(
             """
-            INSERT INTO users (id, google_id, email, name, created_at)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO users (id, google_id, email, created_at)
+            VALUES (?, ?, ?, ?)
             ON CONFLICT(google_id) DO UPDATE SET
-                email = excluded.email,
-                name  = excluded.name
-            RETURNING id, google_id, email, name, created_at
+                email = excluded.email
+            RETURNING id, google_id, email, created_at
             """,
             (
                 str(user.id),
                 user.google_id,
                 user.email.lower(),
-                user.name,
                 user.created_at.isoformat(),
             ),
         ) as cur:

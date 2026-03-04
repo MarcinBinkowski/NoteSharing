@@ -12,12 +12,12 @@ from app.core.config import Settings
 from app.main import create_app
 
 _DUMMY = Settings(
-    SECRET_KEY="x",  # noqa: S106
-    SESSION_SECRET_KEY="x",  # noqa: S106
+    SECRET_KEY="x",  # noqa: S106  # nosec B106  # pragma: allowlist secret
+    SESSION_SECRET_KEY="x",  # noqa: S106  # nosec B106  # pragma: allowlist secret
     SQLITE_URL="sqlite+aiosqlite:///:memory:",
     GCP_PROJECT_ID="dev",
     GOOGLE_CLIENT_ID="dev",
-    GOOGLE_CLIENT_SECRET="dev",  # noqa: S106
+    GOOGLE_CLIENT_SECRET="dev",  # noqa: S106  # nosec B106  # pragma: allowlist secret
     BACKEND_URL="http://localhost:8000",
     FRONTEND_URL="http://localhost:5173",
     CORS_ORIGINS=["http://localhost:5173"],

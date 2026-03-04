@@ -166,7 +166,6 @@ async def _auth_context(firestore_emulator: str) -> AsyncGenerator[_AuthContext]
                 id=_uuid.uuid4(),
                 google_id="test-google-id",
                 email="testuser@example.com",
-                name="Test User",
                 created_at=_datetime.now(UTC),
             )
         )

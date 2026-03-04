@@ -800,17 +800,12 @@
           "email": {
             "type": "string",
             "title": "Email"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
           }
         },
         "type": "object",
         "required": [
           "id",
-          "email",
-          "name"
+          "email"
         ],
         "title": "UserResponse"
       },

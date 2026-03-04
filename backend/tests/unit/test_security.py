@@ -9,13 +9,19 @@ from app.core.security import hash_password, verify_password
 
 pytestmark = pytest.mark.unit
 
-_TEST_SECRET_KEY = "b323255fb490ae5f38eb6b60282fc2a3"  # pragma: allowlist secret
-_TEST_SESSION_KEY = "9c215875bc78a42c8a027eb4481f0da4"  # pragma: allowlist secret
-
+_TEST_SECRET_KEY = "b323255fb490ae5f38eb6b60282fc2a3"
+_TEST_SESSION_KEY = "9c215875bc78a42c8a027eb4481f0da4"
 
 _TEST_SETTINGS = Settings(
     DEBUG=True,
     DATABASE_BACKEND="sqlite",
+    SQLITE_URL="sqlite+aiosqlite:///unused",
+    GCP_PROJECT_ID="test-project",
+    GOOGLE_CLIENT_ID="test-client-id",
+    GOOGLE_CLIENT_SECRET="test-client-secret",
+    BACKEND_URL="http://localhost:8000",
+    FRONTEND_URL="http://localhost:5173",
+    CORS_ORIGINS=["http://localhost:5173"],
     SECRET_KEY=_TEST_SECRET_KEY,
     SESSION_SECRET_KEY=_TEST_SESSION_KEY,
 )

@@ -15,7 +15,6 @@ class FirestoreUserRepository:
         return {
             "google_id": user.google_id,
             "email": user.email.lower(),
-            "name": user.name,
             "created_at": user.created_at,
         }
 
@@ -24,7 +23,6 @@ class FirestoreUserRepository:
             id=uuid.UUID(doc_id),
             google_id=data.get("google_id"),
             email=data["email"],
-            name=data["name"],
             created_at=data["created_at"],
         )
 
@@ -57,7 +55,6 @@ class FirestoreUserRepository:
                 doc_ref = self._users.document(str(existing.id))
                 updated_fields = {
                     "email": user.email.lower(),
-                    "name": user.name,
                     "google_id": user.google_id,
                 }
                 await doc_ref.update(updated_fields)
@@ -65,7 +62,6 @@ class FirestoreUserRepository:
                     id=existing.id,
                     google_id=user.google_id,
                     email=user.email.lower(),
-                    name=user.name,
                     created_at=existing.created_at,
                 )
             return await self.create(user)

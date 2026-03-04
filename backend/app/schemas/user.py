@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 
 class User(BaseModel):
@@ -10,5 +10,4 @@ class User(BaseModel):
     id: uuid.UUID
     google_id: str | None = None
     email: EmailStr
-    name: str = Field(..., min_length=1, max_length=256)
     created_at: datetime

@@ -93,7 +93,6 @@ export interface NoteMetadataResponse {
 export interface UserResponse {
   id: string;
   email: string;
-  name: string;
 }
 
 export type ValidationErrorLocItem = string | number;

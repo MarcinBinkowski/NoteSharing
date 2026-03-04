@@ -6,7 +6,6 @@ from app.schemas.user import User
 pytestmark = pytest.mark.integration
 
 
-
 async def test_get_current_user_unauthenticated(client: AsyncClient) -> None:
     response = await client.get("/api/auth/me")
     assert response.status_code == 401
@@ -20,14 +19,12 @@ async def test_get_current_user_authenticated(
     data = response.json()
     assert data["id"] == str(authed_user.id)
     assert data["email"] == authed_user.email
-    assert data["name"] == authed_user.name
 
 
 async def test_get_current_user_invalid_token(client: AsyncClient) -> None:
     client.cookies.set("notes_at", "not-a-valid-token", domain="test")
     response = await client.get("/api/auth/me")
     assert response.status_code == 401
-
 
 
 async def test_logout_invalidates_session(authed_client: AsyncClient) -> None:

@@ -47,13 +47,11 @@ async def google_callback(
         raise NotAuthorizedError("Missing required fields in Google user info")
 
     email = raw_email.lower()
-    name = user_info.get("name") or email
 
     user = User(
         id=uuid.uuid4(),
         google_id=google_id,
         email=email,
-        name=name,
         created_at=datetime.now(UTC),
     )
 
@@ -62,7 +60,7 @@ async def google_callback(
     return TokenResponse(
         access_token=create_access_token(user.id, app_settings=app_settings),
         refresh_token=create_refresh_token(user.id, app_settings=app_settings),
-        user=UserResponse(id=user.id, email=user.email, name=user.name),
+        user=UserResponse(id=user.id, email=user.email),
     )
 
 
@@ -88,7 +86,7 @@ async def refresh(
     return TokenResponse(
         access_token=create_access_token(user.id, app_settings=app_settings),
         refresh_token=create_refresh_token(user.id, app_settings=app_settings),
-        user=UserResponse(id=user.id, email=user.email, name=user.name),
+        user=UserResponse(id=user.id, email=user.email),
     )
 
 

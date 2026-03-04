@@ -1,10 +1,6 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - main
-      - 'feat-*'
   pull_request:
 
 concurrency:
@@ -33,9 +29,6 @@ jobs:
       - name: Install backend deps
         run: uv sync --project backend --extra dev
 
-      - name: Ruff
-        run: uv run --project backend ruff check backend/
-
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -46,6 +39,11 @@ jobs:
       - name: Install frontend deps
         working-directory: frontend
         run: npm ci
+
+      - name: Pre-commit hooks
+        run: uv run --project backend pre-commit run --all-files --show-diff-on-failure
+        env:
+          SKIP: terraform_fmt,terraform_validate
 
       - name: ESLint
         working-directory: frontend

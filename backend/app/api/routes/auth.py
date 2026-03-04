@@ -174,7 +174,7 @@ async def get_current_user(
     user: Annotated[User, Depends(get_current_user_required)],
 ) -> UserResponse:
     """Return the authenticated user from the access token."""
-    return UserResponse(id=user.id, email=user.email, name=user.name)
+    return UserResponse(id=user.id, email=user.email)
 
 
 @router.post(
