@@ -47,4 +47,3 @@ def create_app(settings: Settings) -> FastAPI:
         register_spa_routes(app, static_dir)
 
     return app
-
