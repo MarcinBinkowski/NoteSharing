@@ -27,7 +27,7 @@ jobs:
           enable-cache: true
 
       - name: Install backend deps
-        run: uv sync --project backend --extra dev
+        run: uv sync --project backend --group dev
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -68,7 +68,7 @@ jobs:
           enable-cache: true
 
       - name: Install backend deps
-        run: uv sync --project backend --extra dev
+        run: uv sync --project backend --group dev
 
       - name: Run unit tests
         run: >
