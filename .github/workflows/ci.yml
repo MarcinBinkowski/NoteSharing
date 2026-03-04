@@ -80,4 +80,4 @@ jobs:
         run: mkdir -p backend/data
 
       - name: Run tests
-        run: uv run --project backend pytest tests/ -v
+        run: uv run --project backend pytest backend/tests/ -v
