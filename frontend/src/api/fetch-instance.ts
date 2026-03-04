@@ -13,7 +13,9 @@ export interface FetchConfig {
 let refreshPromise: Promise<boolean> | null = null;
 let hasNotifiedSessionExpired = false;
 
-const AUTH_ROUTES_WITHOUT_REFRESH = ["/api/auth/refresh", "/api/auth/logout"];
+// /api/auth/me returns 401 for unauthenticated users — no refresh, no toast.
+// Session-expired toast will fire on the next authenticated action instead.
+const AUTH_ROUTES_WITHOUT_REFRESH = ["/api/auth/refresh", "/api/auth/logout", "/api/auth/me"];
 
 function isAuthRouteWithoutRefresh(url: string): boolean {
   return AUTH_ROUTES_WITHOUT_REFRESH.some((route) => url.startsWith(route));
