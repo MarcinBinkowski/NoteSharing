@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, cast
 
 from fastapi import Request
 
@@ -11,7 +11,7 @@ async def open_db_client(settings: Settings) -> Any:
     if settings.DATABASE_BACKEND == "firestore":
         return get_firestore_client(settings)
     if settings.DATABASE_BACKEND == "sqlite":
-        return await open_sqlite(settings.SQLITE_URL)
+        return await open_sqlite(cast(str, settings.SQLITE_URL))  # guaranted by settings
     msg = f"Unsupported database backend: {settings.DATABASE_BACKEND}"
     raise RuntimeError(msg)
 

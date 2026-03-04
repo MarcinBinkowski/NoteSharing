@@ -21,7 +21,7 @@ class Settings(BaseSettings):
 
     DATABASE_BACKEND: Literal["firestore", "sqlite"] = "firestore"
 
-    SQLITE_URL: str
+    SQLITE_URL: str | None = None
 
     GCP_PROJECT_ID: str
     FIRESTORE_DATABASE: str = "(default)"
@@ -43,6 +43,12 @@ class Settings(BaseSettings):
     CORS_ORIGINS: list[str]
 
     LOG_LEVEL: str = "INFO"
+
+    @model_validator(mode="after")
+    def _require_sqlite_url_for_sqlite_backend(self) -> Self:
+        if self.DATABASE_BACKEND == "sqlite" and not self.SQLITE_URL:
+            raise ValueError("NOTES_SQLITE_URL is required when DATABASE_BACKEND=sqlite")
+        return self
 
     @model_validator(mode="after")
     def _normalize_urls_and_cors(self) -> Self:
