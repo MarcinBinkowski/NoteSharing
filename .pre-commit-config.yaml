@@ -12,7 +12,7 @@ repos:
     hooks:
       - id: pyright
         name: pyright
-        entry: bash -c 'cd backend && ../.venv/bin/pyright app/'
+        entry: bash -c 'cd backend && .venv/bin/pyright app/'
         language: system
         files: ^backend/app/
         pass_filenames: false
