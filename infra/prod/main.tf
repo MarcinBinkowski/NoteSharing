@@ -63,30 +63,6 @@ variable "secret_prefix" {
   default     = "notes"
 }
 
-variable "google_oauth_client_id" {
-  description = "Google OAuth client id"
-  type        = string
-  sensitive   = true
-}
-
-variable "google_oauth_client_secret" {
-  description = "Google OAuth client secret"
-  type        = string
-  sensitive   = true
-}
-
-variable "jwt_secret_key" {
-  description = "JWT signing secret"
-  type        = string
-  sensitive   = true
-}
-
-variable "session_secret_key" {
-  description = "Session signing secret"
-  type        = string
-  sensitive   = true
-}
-
 variable "min_instance_count" {
   description = "Minimum Cloud Run instances"
   type        = number
@@ -128,10 +104,6 @@ module "environment" {
   firestore_database_id      = var.firestore_database_id
   firestore_location         = var.firestore_location
   secret_prefix              = var.secret_prefix
-  google_oauth_client_id     = var.google_oauth_client_id
-  google_oauth_client_secret = var.google_oauth_client_secret
-  jwt_secret_key             = var.jwt_secret_key
-  session_secret_key         = var.session_secret_key
   min_instance_count         = var.min_instance_count
   max_instance_count         = var.max_instance_count
   memory_limit               = var.memory_limit
