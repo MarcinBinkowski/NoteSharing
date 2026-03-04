@@ -9,7 +9,7 @@ REGISTRY   := $(REGION)-docker.pkg.dev
 IMAGE_BASE := $(REGISTRY)/$(PROJECT_ID)/notes/notes
 IMAGE_TAG  := $(IMAGE_BASE):$(shell git rev-parse --short HEAD)
 
-.PHONY: deploy build infra regen-client test lint fmt typecheck help
+.PHONY: deploy build infra regen-client test test-integration lint fmt typecheck help
 
 deploy: build infra
 
@@ -30,7 +30,10 @@ regen-client:
 	cd frontend && npx orval --config orval.config.ts
 
 test:
-	cd backend && uv run pytest tests/ -v
+	cd backend && uv run pytest tests/ -v -m 'not integration'
+
+test-integration:
+	cd backend && uv run pytest tests/ -v -m integration
 
 lint:
 	cd backend && uv run ruff check .
@@ -45,4 +48,4 @@ typecheck:
 	cd frontend && npx tsc --noEmit -p tsconfig.app.json
 
 help:
-	@echo "Targets: deploy build infra regen-client test lint fmt typecheck"
+	@echo "Targets: deploy build infra regen-client test test-integration lint fmt typecheck"
