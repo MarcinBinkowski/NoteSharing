@@ -18,5 +18,5 @@ async def verify_password(plain: str, hashed: str) -> bool:
     """
     try:
         return await asyncio.to_thread(_ph.verify, hashed, plain)
-    except (VerifyMismatchError, VerificationError, InvalidHashError):
+    except VerifyMismatchError, VerificationError, InvalidHashError:
         return False

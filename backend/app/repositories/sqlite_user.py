@@ -39,13 +39,11 @@ class SqliteUserRepository:
         return user
 
     async def get_by_id(self, user_id: uuid.UUID) -> User | None:
-        async with self._conn.execute(
-            "SELECT * FROM users WHERE id = ?", (str(user_id),)
-        ) as cur:
+        async with self._conn.execute("SELECT * FROM users WHERE id = ?", (str(user_id),)) as cur:
             row = await cur.fetchone()
         return self._row_to_user(row) if row else None
 
-    async def get_by_google_id(self, google_id: str) -> User | None:
+    async def _get_by_google_id(self, google_id: str) -> User | None:
         async with self._conn.execute(
             "SELECT * FROM users WHERE google_id = ?", (google_id,)
         ) as cur:

@@ -5,9 +5,7 @@ from typing import Any
 
 import httpx
 
-from app.core import config as app_config
 from app.core.auth import (
-    GOOGLE_TOKEN_URL,
     create_access_token,
     create_refresh_token,
     extract_token_subject,
@@ -15,6 +13,7 @@ from app.core.auth import (
 )
 from app.core.config import Settings
 from app.core.exceptions import NotAuthorizedError
+from app.core.jwk import GOOGLE_TOKEN_URL
 from app.repositories.protocols import UserRepository
 from app.schemas.responses import TokenResponse, UserResponse
 from app.schemas.user import User
@@ -30,7 +29,7 @@ async def google_callback(
     redirect_uri: str,
     *,
     nonce: str | None = None,
-    app_settings: Settings | None = None,
+    app_settings: Settings,
 ) -> TokenResponse:
     user_info = await _exchange_google_code(
         code,
@@ -71,7 +70,7 @@ async def refresh(
     users: UserRepository,
     refresh_token: str,
     *,
-    app_settings: Settings | None = None,
+    app_settings: Settings,
 ) -> TokenResponse:
     try:
         user_id = extract_token_subject(
@@ -97,7 +96,7 @@ async def user_from_access_token(
     users: UserRepository,
     access_token: str,
     *,
-    app_settings: Settings | None = None,
+    app_settings: Settings,
 ) -> User:
     try:
         user_id = extract_token_subject(
@@ -119,16 +118,15 @@ async def _exchange_google_code(
     redirect_uri: str,
     *,
     nonce: str | None = None,
-    app_settings: Settings | None = None,
+    app_settings: Settings,
 ) -> dict[str, Any]:
-    settings = app_settings if app_settings is not None else app_config.settings
     async with httpx.AsyncClient(timeout=_TIMEOUT) as client:
         token_resp = await client.post(
             GOOGLE_TOKEN_URL,
             data={
                 "code": code,
-                "client_id": settings.GOOGLE_CLIENT_ID,
-                "client_secret": settings.GOOGLE_CLIENT_SECRET,
+                "client_id": app_settings.GOOGLE_CLIENT_ID,
+                "client_secret": app_settings.GOOGLE_CLIENT_SECRET,
                 "redirect_uri": redirect_uri,
                 "grant_type": "authorization_code",
             },
@@ -154,7 +152,7 @@ async def _exchange_google_code(
         return await verify_google_id_token(
             id_token_str,
             nonce=nonce,
-            app_settings=settings,
+            app_settings=app_settings,
         )
     except ValueError as exc:
         raise NotAuthorizedError(str(exc)) from exc

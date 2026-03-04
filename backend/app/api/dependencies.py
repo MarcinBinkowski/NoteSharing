@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import Cookie, Depends, Request
 
@@ -13,7 +13,7 @@ from app.repositories.sqlite_user import SqliteUserRepository
 from app.schemas.user import User
 
 
-def build_notes_repo(backend: str, db_client: object) -> NoteRepository:
+def build_notes_repo(backend: str, db_client: Any) -> NoteRepository:
     if backend == "firestore":
         return FirestoreNoteRepository(db_client)
     if backend == "sqlite":
@@ -22,7 +22,7 @@ def build_notes_repo(backend: str, db_client: object) -> NoteRepository:
     raise RuntimeError(msg)
 
 
-def build_users_repo(backend: str, db_client: object) -> UserRepository:
+def build_users_repo(backend: str, db_client: Any) -> UserRepository:
     if backend == "firestore":
         return FirestoreUserRepository(db_client)
     if backend == "sqlite":

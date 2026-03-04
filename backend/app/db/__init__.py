@@ -28,9 +28,7 @@ async def check_db_health(request: Request) -> None:
         return
 
     if settings.DATABASE_BACKEND == "firestore":
-        marker_doc = request.app.state.db_client.collection("__healthcheck__").document(
-            "__healthcheck__"
-        )
+        marker_doc = request.app.state.db_client.collection("healthcheck").document("probe")
         await marker_doc.get()
         return
 

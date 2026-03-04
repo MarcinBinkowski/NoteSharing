@@ -11,6 +11,7 @@
           "health"
         ],
         "summary": "Health Check",
+        "description": "Liveness + readiness probe. Returns 503 when the database is unreachable.",
         "operationId": "healthCheck",
         "responses": {
           "200": {
@@ -38,22 +39,6 @@
         "summary": "Create Note",
         "operationId": "createNote",
         "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Authorization"
-            }
-          },
           {
             "name": "notes_at",
             "in": "cookie",
@@ -113,22 +98,6 @@
         "summary": "List My Notes",
         "operationId": "listMyNotes",
         "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Authorization"
-            }
-          },
           {
             "name": "notes_at",
             "in": "cookie",
@@ -193,22 +162,6 @@
             }
           },
           {
-            "name": "authorization",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Authorization"
-            }
-          },
-          {
             "name": "notes_at",
             "in": "cookie",
             "required": false,
@@ -266,22 +219,6 @@
             }
           },
           {
-            "name": "authorization",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Authorization"
-            }
-          },
-          {
             "name": "notes_at",
             "in": "cookie",
             "required": false,
@@ -321,6 +258,7 @@
           "notes"
         ],
         "summary": "Get Note Content",
+        "description": "Retrieve note content, verifying the password when required.\n\nPOST is used intentionally: the password must travel in the request body,\nnot in the URL (which would appear in server logs and browser history).",
         "operationId": "getNoteContent",
         "parameters": [
           {
@@ -331,22 +269,6 @@
               "type": "string",
               "format": "uuid",
               "title": "Note Id"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Authorization"
             }
           },
           {
@@ -553,6 +475,7 @@
           "auth"
         ],
         "summary": "Get Current User",
+        "description": "Return the authenticated user from the access token.",
         "operationId": "getCurrentUser",
         "parameters": [
           {
@@ -569,22 +492,6 @@
                 }
               ],
               "title": "Notes At"
-            }
-          },
-          {
-            "name": "notes_rt",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Notes Rt"
             }
           }
         ],

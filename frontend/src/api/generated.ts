@@ -119,6 +119,7 @@ error?: string | null;
 };
 
 /**
+ * Liveness + readiness probe. Returns 503 when the database is unreachable.
  * @summary Health Check
  */
 export const healthCheck = (
@@ -522,6 +523,10 @@ export const useDeleteNote = <TError = HTTPValidationError,
     }
     
 /**
+ * Retrieve note content, verifying the password when required.
+
+POST is used intentionally: the password must travel in the request body,
+not in the URL (which would appear in server logs and browser history).
  * @summary Get Note Content
  */
 export const getNoteContent = (
@@ -836,6 +841,7 @@ export const useRefreshToken = <TError = HTTPValidationError,
     }
     
 /**
+ * Return the authenticated user from the access token.
  * @summary Get Current User
  */
 export const getCurrentUser = (

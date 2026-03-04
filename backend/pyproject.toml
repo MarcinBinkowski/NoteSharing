@@ -51,7 +51,7 @@ ignore = ["ANN401"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-testpaths = ["tests"]
+testpaths = ["tests/unit", "tests/integration"]
 addopts = "--cov=app --cov-report=term-missing --cov-report=html"
 markers = [
     "unit: fast deterministic unit tests",

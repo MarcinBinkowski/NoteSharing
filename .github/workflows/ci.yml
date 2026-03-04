@@ -55,10 +55,6 @@ jobs:
     name: Tests (backend)
     runs-on: ubuntu-latest
 
-    env:
-      NOTES_DATABASE_BACKEND: sqlite
-      NOTES_SQLITE_URL: sqlite+aiosqlite:///./backend/data/notes.db
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -76,8 +72,14 @@ jobs:
       - name: Install backend deps
         run: uv sync --project backend --extra dev
 
-      - name: Create SQLite data directory
-        run: mkdir -p backend/data
+      - name: Run unit tests
+        run: >
+          uv run --project backend pytest
+          backend/tests/unit/
+          -v -m unit
 
-      - name: Run tests
-        run: uv run --project backend pytest backend/tests/ -v
+      - name: Run integration tests
+        run: >
+          uv run --project backend pytest
+          backend/tests/integration/
+          -v -m integration -p randomly --randomly-seed=12345

@@ -1,12 +1,17 @@
-import { createRouter, createRoute, createRootRoute, Link, redirect } from "@tanstack/react-router";
+import { createRouter, createRoute, createRootRouteWithContext, Link, redirect } from "@tanstack/react-router";
+import { type QueryClient } from "@tanstack/react-query";
 import { Layout } from "@/components/Layout";
 import { CreateNotePage } from "@/pages/CreateNotePage";
 import { ViewNotePage } from "@/pages/ViewNotePage";
 import { MyNotesPage } from "@/pages/MyNotesPage";
 import { LoginPage } from "@/pages/LoginPage";
-import { getCurrentUser } from "@/api/generated";
+import { getGetCurrentUserQueryOptions } from "@/api/generated";
 
-const rootRoute = createRootRoute({
+export interface RouterContext {
+  queryClient: QueryClient;
+}
+
+const rootRoute = createRootRouteWithContext<RouterContext>()({
   component: Layout,
   notFoundComponent: () => (
     <div className="py-12 text-center space-y-4">
@@ -33,9 +38,9 @@ const viewNoteRoute = createRoute({
 const myNotesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/notes/mine",
-  beforeLoad: async () => {
+  beforeLoad: async ({ context }) => {
     try {
-      await getCurrentUser();
+      await context.queryClient.ensureQueryData(getGetCurrentUserQueryOptions());
     } catch {
       throw redirect({ to: "/login" });
     }
@@ -58,6 +63,9 @@ const routeTree = rootRoute.addChildren([
 
 export const router = createRouter({
   routeTree,
+  context: {
+    queryClient: undefined!,
+  },
 });
 
 declare module "@tanstack/react-router" {

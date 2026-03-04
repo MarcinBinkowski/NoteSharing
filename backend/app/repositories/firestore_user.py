@@ -39,7 +39,7 @@ class FirestoreUserRepository:
             return None
         return self._from_doc(doc.id, doc.to_dict())
 
-    async def get_by_google_id(self, google_id: str) -> User | None:
+    async def _get_by_google_id(self, google_id: str) -> User | None:
         query = self._users.where("google_id", "==", google_id).limit(1)
         docs = [doc async for doc in query.stream()]
         if not docs:
@@ -52,7 +52,7 @@ class FirestoreUserRepository:
 
         lock = self._google_locks.setdefault(user.google_id, asyncio.Lock())
         async with lock:
-            existing = await self.get_by_google_id(user.google_id)
+            existing = await self._get_by_google_id(user.google_id)
             if existing:
                 doc_ref = self._users.document(str(existing.id))
                 updated_fields = {

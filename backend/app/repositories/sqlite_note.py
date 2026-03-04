@@ -3,7 +3,6 @@ from datetime import UTC, datetime
 
 import aiosqlite
 
-from app.core.exceptions import NoteNotFoundError
 from app.schemas.note import Note
 
 
@@ -81,16 +80,6 @@ class SqliteNoteRepository:
         await self._conn.commit()
         return deleted is not None
 
-    async def delete_expired(self) -> int:
-        now = self._iso(datetime.now(UTC))
-        async with self._conn.execute(
-            "DELETE FROM notes WHERE expires_at IS NOT NULL AND expires_at <= ? RETURNING id",
-            (now,),
-        ) as cur:
-            rows = list(await cur.fetchall())
-        await self._conn.commit()
-        return len(rows)
-
     async def list_by_owner(self, owner_id: uuid.UUID) -> list[Note]:
         now = self._iso(datetime.now(UTC))
         async with self._conn.execute(
@@ -104,13 +93,3 @@ class SqliteNoteRepository:
         ) as cur:
             rows = await cur.fetchall()
         return [self._row_to_note(r) for r in rows]
-
-    async def set_expires_at(self, note_id: uuid.UUID, expires_at: datetime | None) -> None:
-        async with self._conn.execute(
-            "UPDATE notes SET expires_at = ? WHERE id = ? RETURNING id",
-            (self._iso(expires_at), self._uid(note_id)),
-        ) as cur:
-            row = await cur.fetchone()
-        await self._conn.commit()
-        if row is None:
-            raise NoteNotFoundError(str(note_id))

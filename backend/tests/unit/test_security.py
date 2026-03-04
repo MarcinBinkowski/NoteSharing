@@ -9,11 +9,15 @@ from app.core.security import hash_password, verify_password
 
 pytestmark = pytest.mark.unit
 
+_TEST_SECRET_KEY = "b323255fb490ae5f38eb6b60282fc2a3"  # pragma: allowlist secret
+_TEST_SESSION_KEY = "9c215875bc78a42c8a027eb4481f0da4"  # pragma: allowlist secret
+
+
 _TEST_SETTINGS = Settings(
     DEBUG=True,
     DATABASE_BACKEND="sqlite",
-    SECRET_KEY="test-secret-key-for-jwt-32-bytes-min",
-    SESSION_SECRET_KEY="test-session-secret-key-32-bytes-min",
+    SECRET_KEY=_TEST_SECRET_KEY,
+    SESSION_SECRET_KEY=_TEST_SESSION_KEY,
 )
 
 

@@ -26,7 +26,7 @@ _PREVIEW_MAX_LENGTH = 80
 
 def _to_list_item(note: Note) -> NoteListItem:
     preview = note.content[:_PREVIEW_MAX_LENGTH] + (
-        "\u2026" if len(note.content) > _PREVIEW_MAX_LENGTH else ""
+        "..." if len(note.content) > _PREVIEW_MAX_LENGTH else ""
     )
     return NoteListItem(
         id=note.id,

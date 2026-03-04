@@ -9,6 +9,7 @@ export type User = UserResponse;
 
 interface AuthContextType {
   user: User | null;
+  isLoading: boolean;
   login: () => void;
   logout: () => Promise<void>;
 }
@@ -24,9 +25,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
   const user = currentUserQuery.data ?? null;
+  const isLoading = currentUserQuery.isLoading;
 
   const login = useCallback(() => {
-    window.location.href = "/api/auth/login/google";
+    const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
+    window.location.href = `${apiBase}/auth/login/google`;
   }, []);
 
   const logout = useCallback(async () => {
@@ -34,7 +37,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     window.location.assign("/login");
   }, []);
 
-  const contextValue = useMemo(() => ({ user, login, logout }), [user, login, logout]);
+  const contextValue = useMemo(
+    () => ({ user, isLoading, login, logout }),
+    [user, isLoading, login, logout]
+  );
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 }

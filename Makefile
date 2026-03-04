@@ -26,7 +26,7 @@ infra:
 	  terraform apply -var="container_image=$(IMAGE_TAG)"
 
 regen-client:
-	cd backend && uv run python -c "import json; from app.main import app; json.dump(app.openapi(), open('../frontend/openapi.json','w'), indent=2)"
+	cd backend && uv run python scripts/export_openapi.py
 	cd frontend && npx orval --config orval.config.ts
 
 test:

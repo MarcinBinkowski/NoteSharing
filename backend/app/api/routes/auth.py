@@ -6,10 +6,10 @@ from fastapi import APIRouter, Cookie, Depends, Request, Response
 from fastapi.responses import JSONResponse, RedirectResponse
 
 from app.api.dependencies import get_current_user_required, get_users_repo
-from app.core.auth import GOOGLE_AUTH_BASE
 from app.core.config import Settings
 from app.core.constants import AUTH_ACCESS_COOKIE, AUTH_REFRESH_COOKIE
 from app.core.exceptions import NotAuthorizedError
+from app.core.jwk import GOOGLE_AUTH_BASE
 from app.core.rate_limit import LIMITER
 from app.repositories.protocols import UserRepository
 from app.schemas.responses import TokenResponse, UserResponse
@@ -152,9 +152,7 @@ async def refresh_token(
         return response
 
     try:
-        token_resp = await auth_service.refresh(
-            users, refresh_token_cookie, app_settings=settings
-        )
+        token_resp = await auth_service.refresh(users, refresh_token_cookie, app_settings=settings)
     except NotAuthorizedError as exc:
         response = JSONResponse({"detail": exc.detail}, status_code=401)
         _clear_auth_cookies(response, settings)

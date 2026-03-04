@@ -9,12 +9,12 @@ import { queryClient } from "@/lib/query-client";
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ErrorBoundary>
-          <RouterProvider router={router} />
-        </ErrorBoundary>
-        <Toaster richColors position="top-right" />
-      </AuthProvider>
+      <ErrorBoundary>
+        <AuthProvider>
+          <RouterProvider router={router} context={{ queryClient }} />
+          <Toaster richColors position="top-right" />
+        </AuthProvider>
+      </ErrorBoundary>
     </QueryClientProvider>
   );
 }

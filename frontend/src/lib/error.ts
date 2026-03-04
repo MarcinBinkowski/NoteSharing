@@ -10,10 +10,6 @@ export class ApiError extends Error {
   }
 }
 
-export function isApiError(err: unknown): err is ApiError {
-  return err instanceof ApiError;
-}
-
 export function getStatusCode(err: unknown): number | undefined {
   if (err instanceof ApiError) return err.status;
   return (err as { response?: { status?: number } })?.response?.status;

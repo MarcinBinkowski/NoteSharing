@@ -11,17 +11,13 @@ from fastapi.staticfiles import StaticFiles
 from app.api.middleware import register_middleware
 from app.api.routes import auth_router, notes_router
 from app.core.config import Settings
-from app.core.config import settings as _default_settings
 from app.core.logging import setup_logging
 from app.db import check_db_health, close_db_client, open_db_client
 
 log = logging.getLogger(__name__)
 
 
-def create_app(settings: Settings | None = None) -> FastAPI:
-    if settings is None:
-        settings = _default_settings
-
+def create_app(settings: Settings) -> FastAPI:
     setup_logging(log_level=settings.LOG_LEVEL)
 
     @asynccontextmanager
@@ -97,6 +93,3 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             return FileResponse(static_dir / "index.html")
 
     return app
-
-
-app = create_app()

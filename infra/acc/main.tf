@@ -95,19 +95,19 @@ module "environment" {
     google-beta = google-beta
   }
 
-  project_id                 = var.project_id
-  region                     = var.region
-  environment                = "acc"
-  domain                     = "acc.mbinkowski.tech"
-  container_image            = var.container_image
-  service_name               = var.service_name
-  firestore_database_id      = var.firestore_database_id
-  firestore_location         = var.firestore_location
-  secret_prefix              = var.secret_prefix
-  min_instance_count         = var.min_instance_count
-  max_instance_count         = var.max_instance_count
-  memory_limit               = var.memory_limit
-  cpu_limit                  = var.cpu_limit
+  project_id            = var.project_id
+  region                = var.region
+  environment           = "acc"
+  domain                = "acc.mbinkowski.tech"
+  container_image       = var.container_image
+  service_name          = var.service_name
+  firestore_database_id = var.firestore_database_id
+  firestore_location    = var.firestore_location
+  secret_prefix         = var.secret_prefix
+  min_instance_count    = var.min_instance_count
+  max_instance_count    = var.max_instance_count
+  memory_limit          = var.memory_limit
+  cpu_limit             = var.cpu_limit
 }
 
 output "cloud_run_url" {

@@ -1,12 +1,15 @@
+import pathlib
 from typing import Literal, Self
 
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+_ENV_FILE = pathlib.Path(__file__).resolve().parent.parent.parent / ".env"
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=_ENV_FILE,
         env_prefix="NOTES_",
         env_file_encoding="utf-8",
         extra="ignore",
@@ -18,26 +21,26 @@ class Settings(BaseSettings):
 
     DATABASE_BACKEND: Literal["firestore", "sqlite"] = "firestore"
 
-    SQLITE_URL: str = "sqlite+aiosqlite:///./data/notes.db"
+    SQLITE_URL: str
 
-    GCP_PROJECT_ID: str = ""
+    GCP_PROJECT_ID: str
     FIRESTORE_DATABASE: str = "(default)"
 
-    SECRET_KEY: str = "change-me-in-production-use-openssl-rand-hex-32"  # noqa: S105
-    SESSION_SECRET_KEY: str = ""
+    SECRET_KEY: str  # noqa: S105
+    SESSION_SECRET_KEY: str
 
     JWT_ALGORITHM: Literal["HS256", "HS384", "HS512"] = "HS256"
     JWT_ACCESS_EXPIRE_MINUTES: int = 15
     JWT_REFRESH_EXPIRE_DAYS: int = 7
 
-    GOOGLE_CLIENT_ID: str = ""
-    GOOGLE_CLIENT_SECRET: str = ""
-    BACKEND_URL: str = "http://localhost:8000"
-    FRONTEND_URL: str = "http://localhost:5173"
+    GOOGLE_CLIENT_ID: str
+    GOOGLE_CLIENT_SECRET: str
+    BACKEND_URL: str
+    FRONTEND_URL: str
 
     RATE_LIMIT_DEFAULT: str = "60/minute"
 
-    CORS_ORIGINS: list[str] = ["http://localhost:5173"]
+    CORS_ORIGINS: list[str]
 
     LOG_LEVEL: str = "INFO"
 
@@ -66,6 +69,3 @@ class Settings(BaseSettings):
                 "Generate one with: openssl rand -hex 32"
             )
         return self
-
-
-settings = Settings()

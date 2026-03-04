@@ -1,13 +1,12 @@
 import uuid
 from datetime import UTC, datetime
-from typing import Any, cast
+from typing import Any
 
 from google.cloud.firestore_v1.async_transaction import (
     async_transactional,
 )
 from google.cloud.firestore_v1.base_query import FieldFilter, Or
 
-from app.core.exceptions import NoteNotFoundError
 from app.schemas.note import Note
 
 
@@ -60,23 +59,7 @@ class FirestoreNoteRepository:
             transaction.delete(doc_ref)
             return True
 
-        return cast(bool, await _delete_in_txn(self._client.transaction()))
-
-    async def delete_expired(self) -> int:
-        """Delete all expired notes using write batches (max 500 ops per batch)."""
-        now = datetime.now(UTC)
-        query = self._notes.where("expires_at", "<=", now)
-        count = 0
-        batch = self._client.batch()
-        async for doc in query.stream():
-            batch.delete(doc.reference)
-            count += 1
-            if count % 500 == 0:
-                await batch.commit()
-                batch = self._client.batch()
-        if count % 500 != 0 and count > 0:
-            await batch.commit()
-        return count
+        return await _delete_in_txn(self._client.transaction())
 
     async def list_by_owner(self, owner_id: uuid.UUID) -> list[Note]:
         now = datetime.now(UTC)
@@ -92,10 +75,3 @@ class FirestoreNoteRepository:
             .order_by("created_at", direction="DESCENDING")
         )
         return [self._from_doc(doc.id, doc.to_dict()) async for doc in query.stream()]
-
-    async def set_expires_at(self, note_id: uuid.UUID, expires_at: datetime | None) -> None:
-        doc_ref = self._notes.document(str(note_id))
-        snapshot = await doc_ref.get()
-        if not snapshot.exists:
-            raise NoteNotFoundError(str(note_id))
-        await doc_ref.update({"expires_at": expires_at})
