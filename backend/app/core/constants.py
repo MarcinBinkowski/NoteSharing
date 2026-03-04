@@ -1,0 +1,2 @@
+AUTH_ACCESS_COOKIE = "notes_at"
+AUTH_REFRESH_COOKIE = "notes_rt"

@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.db
+
+# Backend
+.venv/
+backend/.venv/
+backend/data/
+backend/.env
+
+# Secrets & env files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Frontend
+/node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Deploy tooling
+.last-image-*
+
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+*.tfvars
+!*.tfvars.example
+!terraform.tfvars.example
+acc.tfvars
+prod.tfvars
+.last-image-tag
+.uv-mypy_cache
+.ruff_cache
+.pytest_cache
+__pycache__

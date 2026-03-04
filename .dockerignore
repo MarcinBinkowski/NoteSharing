@@ -1,0 +1,59 @@
+# Version control
+.git
+.gitignore
+
+# Python
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+.venv
+backend/.venv
+.pytest_cache
+.ruff_cache
+*.egg-info
+.mypy_cache
+.coverage
+**/htmlcov/
+
+# Node
+node_modules
+frontend/node_modules
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Terraform / Infrastructure
+infra/
+.terraform
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+# Data / local DB
+data/
+backend/data/
+*.db
+
+# Tests (not needed in production image)
+backend/tests/
+backend/alembic/
+
+# Docker
+.dockerignore
+Dockerfile
+Dockerfile.dev
+docker-compose.yml
+
+# GitHub
+.github/
+
+# Misc
+.DS_Store
+.env
+*.log
+README.md
+*.md
