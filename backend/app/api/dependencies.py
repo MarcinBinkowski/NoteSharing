@@ -59,13 +59,10 @@ async def get_current_user_optional(
             expected_type="access",
             app_settings=request.app.state.settings,
         )
-    except ValueError as err:
-        raise NotAuthorizedError("Invalid or expired token") from err
+    except ValueError:
+        return None
 
-    user = await users.get_by_id(user_id)
-    if user is None:
-        raise NotAuthorizedError("Invalid or expired token")
-    return user
+    return await users.get_by_id(user_id)
 
 
 async def get_current_user_required(
