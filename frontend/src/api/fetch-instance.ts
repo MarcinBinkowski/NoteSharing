@@ -15,8 +15,24 @@ let hasNotifiedSessionExpired = false;
 
 const AUTH_ROUTES_WITHOUT_REFRESH = ["/api/auth/refresh", "/api/auth/logout"];
 
+// Detail strings that indicate a legitimate non-auth 401 (e.g. wrong note password).
+// These should NOT trigger a token refresh or "session expired" notification.
+const NON_AUTH_401_DETAILS = new Set(["Invalid password"]);
+
 function isAuthRouteWithoutRefresh(url: string): boolean {
   return AUTH_ROUTES_WITHOUT_REFRESH.some((route) => url.startsWith(route));
+}
+
+async function peek401Detail(response: Response): Promise<string | undefined> {
+  // Clone the response so the original body stream remains unconsumed.
+  // If parsing fails for any reason (non-JSON body, network error, etc.), treat
+  // the 401 as auth-related so we still attempt a token refresh by default.
+  try {
+    const body = (await response.clone().json()) as { detail?: string };
+    return body.detail;
+  } catch {
+    return undefined;
+  }
 }
 
 function notifySessionExpiredOnce(): void {
@@ -118,17 +134,23 @@ export const customFetch = async <T>(config: FetchConfig): Promise<T> => {
   const shouldAttemptRefresh = !isAuthRouteWithoutRefresh(fullUrl);
 
   if (response.status === 401 && shouldAttemptRefresh) {
-    const refreshed = await getRefreshPromise();
-    if (refreshed) {
-      hasNotifiedSessionExpired = false;
-      const { fullUrl: retryUrl, init: retryInit } = buildRequest(config);
-      const retryResponse = await fetch(retryUrl, retryInit);
-      if (!retryResponse.ok) {
-        return throwResponseError(retryResponse);
+    const detail = await peek401Detail(response);
+    // Only skip refresh for 401s we can positively identify as non-auth
+    // (e.g. wrong note password). If detail is unknown, default to auth-related.
+    const isNonAuth401 = detail !== undefined && NON_AUTH_401_DETAILS.has(detail);
+    if (!isNonAuth401) {
+      const refreshed = await getRefreshPromise();
+      if (refreshed) {
+        hasNotifiedSessionExpired = false;
+        const { fullUrl: retryUrl, init: retryInit } = buildRequest(config);
+        const retryResponse = await fetch(retryUrl, retryInit);
+        if (!retryResponse.ok) {
+          return throwResponseError(retryResponse);
+        }
+        return parseResponse<T>(retryResponse);
       }
-      return parseResponse<T>(retryResponse);
+      notifySessionExpiredOnce();
     }
-    notifySessionExpiredOnce();
   }
 
   if (!response.ok) {
